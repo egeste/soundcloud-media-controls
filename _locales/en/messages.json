@@ -1,0 +1,10 @@
+{
+  "extension_name": {
+    "message": "SoundCloud Media Controls",
+    "description": "Extension name"
+  },
+  "extension_description": {
+    "message": "Control SoundCloud using standard media buttons.",
+    "description": "Extension description"
+  }
+}

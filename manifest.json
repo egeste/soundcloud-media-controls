@@ -1,16 +1,25 @@
 {
   "manifest_version": 2,
+
   "default_locale": "en",
+  "name": "__MSG_extension_name__",
+  "description": "__MSG_extension_description__",
 
-  "name": "SoundCloud Media Controls",
+  "author": "Steve (Egesté) Regester <github@egeste.net>",
   "version": "0.0.1",
-  "author": "Steve (Egesté) Regester <chrome-extensions@egeste.net>",
-  "description": "Control SoundCloud using standard media buttons.",
-  "homepage_url": "https://github.com/egeste/soundcloud-media-controls",
 
-  "icons": {...},
-  "page_action": {...},
-  "update_url": "https://github.com/egeste/soundcloud-media-controls/updates.xml",
+  "homepage_url": "https://github.com/egeste/soundcloud-media-controls",
+  "update_url": "https://github.com/egeste/soundcloud-media-controls/raw/master/updates.xml",
+
+  "permissions": [
+    "tabs",
+    "http://soundcloud.com/*",
+    "https://soundcloud.com/*"
+  ],
+
+  "background": {
+    "scripts": ["background.js"]
+  },
 
   "commands": {
     "play-pause": {
