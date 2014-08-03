@@ -1,26 +1,38 @@
 {
   "manifest_version": 2,
-
   "default_locale": "en",
   "name": "__MSG_extension_name__",
   "description": "__MSG_extension_description__",
-
   "author": "Steve (Egesté) Regester <github@egeste.net>",
   "version": "0.0.1",
-
   "homepage_url": "https://github.com/egeste/soundcloud-media-controls",
   "update_url": "https://github.com/egeste/soundcloud-media-controls/raw/master/updates.xml",
-
+  "icons": {
+    "16": "/images/logo_16.png",
+    "48": "/images/logo_48.png",
+    "128": "/images/logo_128.png"
+  },
+  "browser_action": {
+    "default_title": "__MSG_extension_name__",
+    "default_icon": {
+      "19": "images/logo_19.png",
+      "38": "images/logo_38.png"
+    }
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
   "permissions": [
     "tabs",
-    "http://soundcloud.com/*",
-    "https://soundcloud.com/*"
+    "*://soundcloud.com/*"
   ],
-
-  "background": {
-    "scripts": ["background.js"]
+  "externally_connectable": {
+    "matches": [
+      "*://soundcloud.com/*"
+    ]
   },
-
   "commands": {
     "play-pause": {
       "global": true,
