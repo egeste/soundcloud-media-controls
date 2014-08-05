@@ -10,6 +10,7 @@ define [
       return -1 * model.get 'lastPlayed'
 
     initialize: ->
+      @on 'change:lastPlayed', @sort, this
       chrome.runtime.onMessageExternal.addListener ({event, data}, {tab}) =>
         return unless event is 'audio:play'
         @add _.extend {

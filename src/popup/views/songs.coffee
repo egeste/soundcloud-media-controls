@@ -19,7 +19,16 @@ define [
       template: -> """
         <img class="col-xs-2" src="#{@model.get 'artwork_url'}"/>
         <ul class="col-xs-10 list-unstyled">
-          <li data-prop="model" data-prop-attr="title"/>
+          <li><strong data-prop="model" data-prop-attr="title"/></li>
+          <li>
+            <small data-prop="model"
+                   data-prop-attr="genre"
+                   class="pull-right"
+            />
+            <small data-prop="model"
+                   data-prop-attr="user.username"
+            />
+          </li>
         </ul>
       """
 
@@ -30,17 +39,13 @@ define [
   ]
 
   Oraculum.extend 'View', 'Songs.View', {
+    tagName: 'ul'
+    className: 'list-unstyled'
 
     mixinOptions:
       staticClasses: ['songs-view']
       list:
         modelView: 'Song.View'
-        listSelector: '.song-list'
-      # TODO: i18n
-      template: '''
-        <h1>Song History</h1>
-        <ul class="song-list list-unstyled"/>
-      '''
 
   }, {
     singleton: true
@@ -48,7 +53,6 @@ define [
       'List.ViewMixin'
       'RegionAttach.ViewMixin'
       'StaticClasses.ViewMixin'
-      'HTMLTemplating.ViewMixin'
       'AutoRender.ViewMixin'
     ]
   }

@@ -1,11 +1,9 @@
 define [
   'oraculum'
   'oraculum/libs'
+  'shared/models/song'
   'views/browser-action'
   'mixins/inject-content-scripts'
-
-  # Pull in the pop song model so we can cache everything
-  '../popup/models/song'
 ], (Oraculum) ->
   'use strict'
 

@@ -2,8 +2,8 @@ define [
   'oraculum'
   'oraculum/application/controller'
 
-  'models/song'
   'views/songs'
+  'shared/models/song'
 ], (Oraculum) ->
   'use strict'
 

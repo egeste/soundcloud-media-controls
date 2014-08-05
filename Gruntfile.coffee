@@ -25,9 +25,17 @@ module.exports = (grunt) ->
       dist       : ['dist']
       css        : ['build/css']
       popup      : ['build/src/popup']
+      shared     : ['build/src/shared']
       background : ['build/src/background']
 
     coffee:
+      shared:
+        expand: true
+        flatten: false
+        cwd: 'src/shared'
+        src: ['**/*.coffee']
+        dest: 'build/src/shared/'
+        ext: '.js'
       popup:
         expand: true
         flatten: false
@@ -71,15 +79,18 @@ module.exports = (grunt) ->
           'build/css/popup.csso.ap.less.css': 'build/css/popup.ap.less.css'
 
     watch:
-      styles:
-        files: ['assets/less/**/*.less']
-        tasks: ['styles']
+      shared:
+        files: ['src/shared/**/*.coffee']
+        tasks: ['shared']
       popup:
         files: ['src/popup/**/*.coffee']
         tasks: ['popup']
       background:
         files: ['src/background/**/*.coffee']
         tasks: ['background']
+      styles:
+        files: ['assets/less/**/*.less']
+        tasks: ['styles']
 
     bump:
       options:
@@ -96,6 +107,11 @@ module.exports = (grunt) ->
     'csso'
   ]
 
+  grunt.registerTask 'shared', [
+    'clean:shared'
+    'coffee:shared'
+  ]
+
   grunt.registerTask 'popup', [
     'clean:popup'
     'coffee:popup'
@@ -109,6 +125,7 @@ module.exports = (grunt) ->
   ]
 
   grunt.registerTask 'default', [
+    'shared'
     'popup'
     'background'
     'styles'
