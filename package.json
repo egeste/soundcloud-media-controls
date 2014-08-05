@@ -1,0 +1,15 @@
+{
+  "name": "soundcloud-media-controls",
+  "version": "0.0.0",
+  "description": "Control SoundCloud using standard media buttons.",
+  "devDependencies": {
+    "bower": "latest",
+    "grunt-cli": "latest",
+    "underscore": "latest",
+    "grunt-contrib-bump": "latest",
+    "grunt-contrib-clean": "latest",
+    "grunt-contrib-watch": "latest",
+    "grunt-contrib-coffee": "latest",
+    "grunt-contrib-requirejs": "latest"
+  }
+}

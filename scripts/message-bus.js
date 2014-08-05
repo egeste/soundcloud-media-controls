@@ -1,16 +1,26 @@
-var eventStream, payload, script;
+var messageBus, payload, script;
 
-eventStream = function (id) {
+messageBus = function (id) {
   require(['event-bus'], function (eventBus) {
-    eventBus.on('all', function (e,d) {
-      chrome.runtime.sendMessage(id, {event:e,data:d}, function (response) {
-        console.log(arguments);
+    eventBus.on('all', function (event, data) {
+      chrome.runtime.sendMessage(id, {
+        data: data,
+        event: event
       });
+    });
+  });
+  require(['lib/play-manager'], function (playManager) {
+    window.addEventListener('message', function (event) {
+      switch (event.data) {
+        case 'next': playManager.playNext(); break;
+        case 'previous': playManager.playPrev(); break;
+        case 'play-pause': playManager.toggleCurrent(); break;
+      };
     });
   });
 };
 
-payload = '('+eventStream.toString()+')';
+payload = '('+messageBus.toString()+')';
 payload += '("'+chrome.runtime.id+'")';
 
 script = document.createElement('script');
@@ -19,3 +29,7 @@ script.text = payload;
 
 document.head.appendChild(script);
 document.head.removeChild(script);
+
+chrome.runtime.onMessage.addListener(function (command) {
+  window.postMessage(command, '*');
+});

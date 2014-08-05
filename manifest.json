@@ -21,7 +21,7 @@
   },
   "background": {
     "scripts": [
-      "background.js"
+      "dist/background.js"
     ]
   },
   "permissions": [
