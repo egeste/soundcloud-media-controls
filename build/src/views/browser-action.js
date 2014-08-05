@@ -11,7 +11,6 @@
         height: 19
       },
       initialize: function() {
-        this.renderPlayIcon();
         return chrome.runtime.onMessageExternal.addListener((function(_this) {
           return function(_arg) {
             var event;
@@ -26,7 +25,8 @@
         })(this));
       },
       _clear: function() {
-        return this.el.getContext('2d').clearRect(0, 0, 19, 19);
+        this.el.getContext('2d').clearRect(0, 0, 19, 19);
+        return this;
       },
       _drawCircle: function(fill, stroke) {
         var context;
@@ -44,7 +44,8 @@
         context.stroke();
         context.fillStyle = fill;
         context.fill();
-        return context.closePath();
+        context.closePath();
+        return this;
       },
       _drawPlayIcon: function(fill, stroke) {
         var context;
@@ -66,7 +67,8 @@
         context.stroke();
         context.fillStyle = fill;
         context.fill();
-        return context.closePath();
+        context.closePath();
+        return this;
       },
       _drawPauseIcon: function(fill, stroke) {
         var context;
@@ -85,24 +87,20 @@
         context.stroke();
         context.fillStyle = fill;
         context.fill();
-        return context.closePath();
-      },
-      renderPlayIcon: function() {
-        this._clear();
-        this._drawCircle();
-        this._drawPlayIcon();
-        return this.render();
-      },
-      renderPauseIcon: function() {
-        this._clear();
-        this._drawCircle();
-        this._drawPauseIcon();
-        return this.render();
+        context.closePath();
+        return this;
       },
       render: function() {
-        return chrome.browserAction.setIcon({
+        chrome.browserAction.setIcon({
           imageData: this.el.getContext('2d').getImageData(0, 0, 19, 19)
         });
+        return this;
+      },
+      renderPlayIcon: function() {
+        return this._clear()._drawCircle()._drawPlayIcon().render();
+      },
+      renderPauseIcon: function() {
+        return this._clear()._drawCircle()._drawPauseIcon().render();
       }
     }, {
       singleton: true

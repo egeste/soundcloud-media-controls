@@ -13,7 +13,6 @@ define [
       height: 19
 
     initialize: ->
-      @renderPlayIcon()
       chrome.runtime.onMessageExternal.addListener ({event}) =>
         switch event
           when 'audio:play' then @renderPauseIcon()
@@ -21,6 +20,7 @@ define [
 
     _clear: ->
       @el.getContext('2d').clearRect(0, 0, 19, 19)
+      return this
 
     _drawCircle: (fill=accentColor, stroke=brandColor) ->
       context = @el.getContext '2d'
@@ -32,6 +32,7 @@ define [
       context.fillStyle = fill
       context.fill()
       context.closePath()
+      return this
 
     _drawPlayIcon: (fill='#fff', stroke=brandColor) ->
       context = @el.getContext '2d'
@@ -47,6 +48,7 @@ define [
       context.fillStyle = fill
       context.fill()
       context.closePath()
+      return this
 
     _drawPauseIcon: (fill='#fff', stroke=brandColor) ->
       context = @el.getContext '2d'
@@ -59,21 +61,17 @@ define [
       context.fillStyle = fill
       context.fill()
       context.closePath()
-
-    renderPlayIcon: ->
-      @_clear()
-      @_drawCircle()
-      @_drawPlayIcon()
-      @render()
-
-    renderPauseIcon: ->
-      @_clear()
-      @_drawCircle()
-      @_drawPauseIcon()
-      @render()
+      return this
 
     render: ->
       chrome.browserAction.setIcon
         imageData: @el.getContext('2d').getImageData(0, 0, 19, 19)
+      return this
+
+    renderPlayIcon: ->
+      return @_clear()._drawCircle()._drawPlayIcon().render()
+
+    renderPauseIcon: ->
+      return @_clear()._drawCircle()._drawPauseIcon().render()
 
   }, singleton: true

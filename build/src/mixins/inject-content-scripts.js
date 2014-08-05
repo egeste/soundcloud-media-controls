@@ -12,41 +12,45 @@
       },
       mixinitialize: function() {
         var urlMatcher;
-        _.bindAll(this, '_handleUpdate');
+        chrome.tabs.onUpdated.addListener((function(_this) {
+          return function(tabId, _arg) {
+            var status;
+            status = _arg.status;
+            if (status === 'complete') {
+              return _this.injectContentScripts(tabId);
+            }
+          };
+        })(this));
         urlMatcher = this.mixinOptions.injectContentScripts.urlMatcher;
-        chrome.tabs.onUpdated.addListener(this._handleUpdate);
         return chrome.tabs.query({
           url: urlMatcher
         }, (function(_this) {
           return function(tabs) {
             return _.each(tabs, function(tab) {
-              return _this.injectContentScripts(tab);
+              return _this.injectContentScripts(tab.id);
             });
           };
         })(this));
       },
-      _handleUpdate: function(id, update, tab) {
-        if (update.status !== 'complete') {
-          return;
-        }
-        return this.injectContentScripts(tab);
-      },
-      injectContentScripts: function(tab) {
-        var regexMatcher, scripts, urlMatcher;
+      injectContentScripts: function(tabId) {
+        var regexMatcher, urlMatcher;
         urlMatcher = this.mixinOptions.injectContentScripts.urlMatcher;
         regexMatcher = urlMatcher.replace('*', '.*');
-        if (!tab) {
-          return;
-        }
-        if (!RegExp("" + regexMatcher, "i").test(tab.url)) {
-          return;
-        }
-        scripts = this.mixinOptions.injectContentScripts.scripts;
-        return _.each(scripts, function(file) {
-          return chrome.tabs.executeScript(tab.id, {
-            file: file
-          });
-        });
+        return chrome.tabs.get(tabId, (function(_this) {
+          return function(_arg) {
+            var id, scripts, url;
+            id = _arg.id, url = _arg.url;
+            if (!RegExp("" + regexMatcher, "i").test(url)) {
+              return;
+            }
+            scripts = _this.mixinOptions.injectContentScripts.scripts;
+            return _.each(scripts, function(file) {
+              return chrome.tabs.executeScript(id, {
+                file: file
+              });
+            });
+          };
+        })(this));
       }
     });
   });

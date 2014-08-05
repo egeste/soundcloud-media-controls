@@ -1,7 +1,14 @@
 var messageBus, payload, script;
 
+chrome.runtime.onMessage.addListener(function (command) {
+  console.log('SCMC::content_script::window::postMessage', command);
+  window.postMessage(command, '*');
+});
+
 messageBus = function (id) {
+  console.log('SCMC::content_script::window::messageBus', id);
   require(['event-bus'], function (eventBus) {
+    console.log('SCMC::content_script::window::eventBus', eventBus);
     eventBus.on('all', function (event, data) {
       chrome.runtime.sendMessage(id, {
         data: data,
@@ -10,7 +17,9 @@ messageBus = function (id) {
     });
   });
   require(['lib/play-manager'], function (playManager) {
+    console.log('SCMC::content_script::window::playManager', playManager);
     window.addEventListener('message', function (event) {
+      console.log('SCMC::content_script::window::message', event);
       switch (event.data) {
         case 'next': playManager.playNext(); break;
         case 'previous': playManager.playPrev(); break;
@@ -29,7 +38,3 @@ script.text = payload;
 
 document.head.appendChild(script);
 document.head.removeChild(script);
-
-chrome.runtime.onMessage.addListener(function (command) {
-  window.postMessage(command, '*');
-});

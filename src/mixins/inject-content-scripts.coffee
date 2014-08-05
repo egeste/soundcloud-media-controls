@@ -14,20 +14,19 @@ define [
         urlMatcher: ''
 
     mixinitialize: ->
-      _.bindAll this, '_handleUpdate'
+      # Inject our scripts into all new tabs that match our urlMatcher
+      chrome.tabs.onUpdated.addListener (tabId, {status}) =>
+        @injectContentScripts tabId if status is 'complete'
+
+      # Inject our scripts in all existing tabs that match our urlMatcher
       urlMatcher = @mixinOptions.injectContentScripts.urlMatcher
-      chrome.tabs.onUpdated.addListener @_handleUpdate
       chrome.tabs.query {url: urlMatcher}, (tabs) =>
-        _.each tabs, (tab) => @injectContentScripts tab
+        _.each tabs, (tab) => @injectContentScripts tab.id
 
-    _handleUpdate: (id, update, tab) ->
-      return unless update.status is 'complete'
-      @injectContentScripts tab
-
-    injectContentScripts: (tab) ->
+    injectContentScripts: (tabId) ->
       urlMatcher = @mixinOptions.injectContentScripts.urlMatcher
       regexMatcher = urlMatcher.replace '*', '.*'
-      return unless tab
-      return unless ///#{regexMatcher}///i.test tab.url
-      scripts = @mixinOptions.injectContentScripts.scripts
-      _.each scripts, (file) -> chrome.tabs.executeScript tab.id, {file}
+      chrome.tabs.get tabId, ({id, url}) =>
+        return unless ///#{regexMatcher}///i.test url
+        scripts = @mixinOptions.injectContentScripts.scripts
+        _.each scripts, (file) -> chrome.tabs.executeScript id, {file}

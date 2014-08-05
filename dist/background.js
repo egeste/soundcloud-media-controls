@@ -13242,119 +13242,6 @@ SOFTWARE.
 define('oraculum', ['oraculum/main'], function (main) { return main; });
 
 (function() {
-  define('views/browser-action',['oraculum'], function(Oraculum) {
-    
-    var accentColor, brandColor;
-    brandColor = '#f30';
-    accentColor = '#f80';
-    return Oraculum.extend('View', 'BrowserAction.View', {
-      tagName: 'canvas',
-      attributes: {
-        width: 19,
-        height: 19
-      },
-      initialize: function() {
-        this.renderPlayIcon();
-        return chrome.runtime.onMessageExternal.addListener((function(_this) {
-          return function(_arg) {
-            var event;
-            event = _arg.event;
-            switch (event) {
-              case 'audio:play':
-                return _this.renderPauseIcon();
-              case 'audio:pause':
-                return _this.renderPlayIcon();
-            }
-          };
-        })(this));
-      },
-      _clear: function() {
-        return this.el.getContext('2d').clearRect(0, 0, 19, 19);
-      },
-      _drawCircle: function(fill, stroke) {
-        var context;
-        if (fill == null) {
-          fill = accentColor;
-        }
-        if (stroke == null) {
-          stroke = brandColor;
-        }
-        context = this.el.getContext('2d');
-        context.beginPath();
-        context.arc(9.5, 9.5, 8.5, 0, 2 * Math.PI);
-        context.strokeStyle = stroke;
-        context.lineWidth = 1;
-        context.stroke();
-        context.fillStyle = fill;
-        context.fill();
-        return context.closePath();
-      },
-      _drawPlayIcon: function(fill, stroke) {
-        var context;
-        if (fill == null) {
-          fill = '#fff';
-        }
-        if (stroke == null) {
-          stroke = brandColor;
-        }
-        context = this.el.getContext('2d');
-        context.beginPath();
-        context.moveTo(7.125, 4.75);
-        context.lineTo(14, 9.5);
-        context.lineTo(7.125, 14);
-        context.lineTo(9, 9.5);
-        context.lineTo(7.125, 4.75);
-        context.strokeStyle = stroke;
-        context.lineWidth = 1;
-        context.stroke();
-        context.fillStyle = fill;
-        context.fill();
-        return context.closePath();
-      },
-      _drawPauseIcon: function(fill, stroke) {
-        var context;
-        if (fill == null) {
-          fill = '#fff';
-        }
-        if (stroke == null) {
-          stroke = brandColor;
-        }
-        context = this.el.getContext('2d');
-        context.beginPath();
-        context.rect(6.0625, 4.75, 2.375, 9.5);
-        context.rect(10.5625, 4.75, 2.375, 9.5);
-        context.strokeStyle = stroke;
-        context.lineWidth = 1;
-        context.stroke();
-        context.fillStyle = fill;
-        context.fill();
-        return context.closePath();
-      },
-      renderPlayIcon: function() {
-        this._clear();
-        this._drawCircle();
-        this._drawPlayIcon();
-        return this.render();
-      },
-      renderPauseIcon: function() {
-        this._clear();
-        this._drawCircle();
-        this._drawPauseIcon();
-        return this.render();
-      },
-      render: function() {
-        return chrome.browserAction.setIcon({
-          imageData: this.el.getContext('2d').getImageData(0, 0, 19, 19)
-        });
-      }
-    }, {
-      singleton: true
-    });
-  });
-
-}).call(this);
-
-(function() {
   define('oraculum/libs',['oraculum'], function(Oraculum) {
     
     Oraculum.define('jQuery', (function() {
@@ -13377,42 +13264,170 @@ define('oraculum', ['oraculum/main'], function (main) { return main; });
 }).call(this);
 
 (function() {
-  define('mixins/track-playing-tab',['oraculum', 'oraculum/libs'], function(Oraculum) {
+  define('views/browser-action',['oraculum'], function(Oraculum) {
+    
+    var accentColor, brandColor;
+    brandColor = '#f30';
+    accentColor = '#f80';
+    return Oraculum.extend('View', 'BrowserAction.View', {
+      tagName: 'canvas',
+      attributes: {
+        width: 19,
+        height: 19
+      },
+      initialize: function() {
+        return chrome.runtime.onMessageExternal.addListener((function(_this) {
+          return function(_arg) {
+            var event;
+            event = _arg.event;
+            switch (event) {
+              case 'audio:play':
+                return _this.renderPauseIcon();
+              case 'audio:pause':
+                return _this.renderPlayIcon();
+            }
+          };
+        })(this));
+      },
+      _clear: function() {
+        this.el.getContext('2d').clearRect(0, 0, 19, 19);
+        return this;
+      },
+      _drawCircle: function(fill, stroke) {
+        var context;
+        if (fill == null) {
+          fill = accentColor;
+        }
+        if (stroke == null) {
+          stroke = brandColor;
+        }
+        context = this.el.getContext('2d');
+        context.beginPath();
+        context.arc(9.5, 9.5, 8.5, 0, 2 * Math.PI);
+        context.strokeStyle = stroke;
+        context.lineWidth = 1;
+        context.stroke();
+        context.fillStyle = fill;
+        context.fill();
+        context.closePath();
+        return this;
+      },
+      _drawPlayIcon: function(fill, stroke) {
+        var context;
+        if (fill == null) {
+          fill = '#fff';
+        }
+        if (stroke == null) {
+          stroke = brandColor;
+        }
+        context = this.el.getContext('2d');
+        context.beginPath();
+        context.moveTo(7.125, 4.75);
+        context.lineTo(14, 9.5);
+        context.lineTo(7.125, 14);
+        context.lineTo(9, 9.5);
+        context.lineTo(7.125, 4.75);
+        context.strokeStyle = stroke;
+        context.lineWidth = 1;
+        context.stroke();
+        context.fillStyle = fill;
+        context.fill();
+        context.closePath();
+        return this;
+      },
+      _drawPauseIcon: function(fill, stroke) {
+        var context;
+        if (fill == null) {
+          fill = '#fff';
+        }
+        if (stroke == null) {
+          stroke = brandColor;
+        }
+        context = this.el.getContext('2d');
+        context.beginPath();
+        context.rect(6.0625, 4.75, 2.375, 9.5);
+        context.rect(10.5625, 4.75, 2.375, 9.5);
+        context.strokeStyle = stroke;
+        context.lineWidth = 1;
+        context.stroke();
+        context.fillStyle = fill;
+        context.fill();
+        context.closePath();
+        return this;
+      },
+      render: function() {
+        chrome.browserAction.setIcon({
+          imageData: this.el.getContext('2d').getImageData(0, 0, 19, 19)
+        });
+        return this;
+      },
+      renderPlayIcon: function() {
+        return this._clear()._drawCircle()._drawPlayIcon().render();
+      },
+      renderPauseIcon: function() {
+        return this._clear()._drawCircle()._drawPauseIcon().render();
+      }
+    }, {
+      singleton: true
+    });
+  });
+
+}).call(this);
+
+(function() {
+  define('mixins/track-active-tab',['oraculum', 'oraculum/libs'], function(Oraculum) {
     
     var _;
     _ = Oraculum.get('underscore');
-    return Oraculum.defineMixin('TrackPlayingTab.ExtensionMixin', {
+    return Oraculum.defineMixin('TrackActiveTab.ExtensionMixin', {
       mixinOptions: {
-        trackPlayingTab: {
+        trackActiveTab: {
           urlMatcher: ''
         }
       },
       mixinitialize: function() {
-        chrome.tabs.onUpdated.addListener(this.trackPlayingTab);
-        chrome.tabs.onRemoved.addListener(this.trackPlayingTab);
-        chrome.tabs.onActivated.addListener(this.trackPlayingTab);
-        chrome.runtime.onMessageExternal.addListener((function(_this) {
-          return function(_arg, _arg1) {
-            var event, tab;
-            event = _arg.event;
-            tab = _arg1.tab;
-            if (event === 'audio:playing') {
-              return _this.trackPlayingTab(tab);
+        this.resolveActiveTab();
+        chrome.tabs.onActivated.addListener((function(_this) {
+          return function(_arg) {
+            var tabId;
+            tabId = _arg.tabId;
+            return _this.trackActiveTab(tabId);
+          };
+        })(this));
+        chrome.tabs.onUpdated.addListener((function(_this) {
+          return function(tabId) {
+            return _this.trackActiveTab(tabId);
+          };
+        })(this));
+        return chrome.tabs.onRemoved.addListener((function(_this) {
+          return function(tabId) {
+            if (_this.activeTabId === tabId) {
+              delete _this.activeTabId;
+            }
+            return _this.resolveActiveTab();
+          };
+        })(this));
+      },
+      trackActiveTab: function(tabId) {
+        var regexMatcher, urlMatcher;
+        urlMatcher = this.mixinOptions.trackActiveTab.urlMatcher;
+        regexMatcher = urlMatcher.replace('*', '.*');
+        return chrome.tabs.get(tabId, (function(_this) {
+          return function(_arg) {
+            var id, url;
+            id = _arg.id, url = _arg.url;
+            if (RegExp("" + regexMatcher, "i").test(url)) {
+              return _this.activeTabId = id;
+            } else {
+              return _this.resolveActiveTab();
             }
           };
         })(this));
-        return this.trackPlayingTab();
       },
-      trackPlayingTab: function(tab) {
+      resolveActiveTab: function(callback) {
         var urlMatcher;
-        if (tab) {
-          return this.playingTab = tab;
-        }
-        if (this.playingTab) {
-          return this.playingTab;
-        }
-        urlMatcher = this.mixinOptions.trackPlayingTab.urlMatcher;
-        return chrome.tabs.query({
+        urlMatcher = this.mixinOptions.trackActiveTab.urlMatcher;
+        chrome.tabs.query({
           url: urlMatcher
         }, (function(_this) {
           return function(tabs) {
@@ -13421,16 +13436,19 @@ define('oraculum', ['oraculum/main'], function (main) { return main; });
             }
             _.each(tabs, function(tab) {
               if (tab.active) {
-                return _this.playingTab = tab;
+                return _this.activeTabId = tab.id;
               }
               if (tab.selected) {
-                return _this.playingTab = tab;
+                return _this.activeTabId = tab.id;
               }
               if (tab.highlighted) {
-                return _this.playingTab = tab;
+                return _this.activeTabId = tab.id;
               }
             });
-            return _this.playingTab = tabs[0];
+            _this.activeTabId = tabs[0].id;
+            if (callback) {
+              return callback(_this.activeTabId);
+            }
           };
         })(this));
       }
@@ -13453,41 +13471,45 @@ define('oraculum', ['oraculum/main'], function (main) { return main; });
       },
       mixinitialize: function() {
         var urlMatcher;
-        _.bindAll(this, '_handleUpdate');
+        chrome.tabs.onUpdated.addListener((function(_this) {
+          return function(tabId, _arg) {
+            var status;
+            status = _arg.status;
+            if (status === 'complete') {
+              return _this.injectContentScripts(tabId);
+            }
+          };
+        })(this));
         urlMatcher = this.mixinOptions.injectContentScripts.urlMatcher;
-        chrome.tabs.onUpdated.addListener(this._handleUpdate);
         return chrome.tabs.query({
           url: urlMatcher
         }, (function(_this) {
           return function(tabs) {
             return _.each(tabs, function(tab) {
-              return _this.injectContentScripts(tab);
+              return _this.injectContentScripts(tab.id);
             });
           };
         })(this));
       },
-      _handleUpdate: function(id, update, tab) {
-        if (update.status !== 'complete') {
-          return;
-        }
-        return this.injectContentScripts(tab);
-      },
-      injectContentScripts: function(tab) {
-        var regexMatcher, scripts, urlMatcher;
+      injectContentScripts: function(tabId) {
+        var regexMatcher, urlMatcher;
         urlMatcher = this.mixinOptions.injectContentScripts.urlMatcher;
         regexMatcher = urlMatcher.replace('*', '.*');
-        if (!tab) {
-          return;
-        }
-        if (!RegExp("" + regexMatcher, "i").test(tab.url)) {
-          return;
-        }
-        scripts = this.mixinOptions.injectContentScripts.scripts;
-        return _.each(scripts, function(file) {
-          return chrome.tabs.executeScript(tab.id, {
-            file: file
-          });
-        });
+        return chrome.tabs.get(tabId, (function(_this) {
+          return function(_arg) {
+            var id, scripts, url;
+            id = _arg.id, url = _arg.url;
+            if (!RegExp("" + regexMatcher, "i").test(url)) {
+              return;
+            }
+            scripts = _this.mixinOptions.injectContentScripts.scripts;
+            return _.each(scripts, function(file) {
+              return chrome.tabs.executeScript(id, {
+                file: file
+              });
+            });
+          };
+        })(this));
       }
     });
   });
@@ -13495,13 +13517,29 @@ define('oraculum', ['oraculum/main'], function (main) { return main; });
 }).call(this);
 
 (function() {
-  define('extension',['oraculum', 'views/browser-action', 'mixins/track-playing-tab', 'mixins/inject-content-scripts'], function(Oraculum) {
+  define('extension',['oraculum', 'oraculum/libs', 'views/browser-action', 'mixins/track-active-tab', 'mixins/inject-content-scripts'], function(Oraculum) {
     
-    var ChromeExtension;
+    var ChromeExtension, _;
+    _ = Oraculum.get('underscore');
     return Oraculum.define('Extension', (ChromeExtension = (function() {
       function ChromeExtension() {
+        _.bindAll(this, '_sendCommand');
         this.__factory().get('BrowserAction.View');
-        this._addCommandListeners();
+        chrome.commands.onCommand.addListener(this._sendCommand);
+        chrome.runtime.onMessageExternal.addListener((function(_this) {
+          return function(_arg, _arg1) {
+            var event, tab;
+            event = _arg.event;
+            tab = _arg1.tab;
+            if (event === 'audio:play') {
+              _this.trackActiveTab(tab.id);
+            }
+            if (event === 'audio:pause') {
+              delete _this.activeTabId;
+              return _this.resolveActiveTab();
+            }
+          };
+        })(this));
       }
 
       ChromeExtension.prototype.mixinOptions = {
@@ -13509,26 +13547,28 @@ define('oraculum', ['oraculum/main'], function (main) { return main; });
           urlMatcher: '*://soundcloud.com/*',
           scripts: ['scripts/message-bus.js']
         },
-        trackPlayingTab: {
+        trackActiveTab: {
           urlMatcher: '*://soundcloud.com/*'
         }
       };
 
-      ChromeExtension.prototype._addCommandListeners = function() {
-        return chrome.commands.onCommand.addListener((function(_this) {
-          return function(command) {
-            if (_this.playingTab) {
-              return chrome.tabs.sendMessage(_this.playingTab.id, command);
-            }
-          };
-        })(this));
+      ChromeExtension.prototype._sendCommand = function(command) {
+        var sendCommand;
+        sendCommand = function(tabId) {
+          return chrome.tabs.sendMessage(tabId, command);
+        };
+        if (this.activeTabId) {
+          return sendCommand(this.activeTabId);
+        } else {
+          return this.resolveActiveTab(sendCommand);
+        }
       };
 
       return ChromeExtension;
 
     })()), {
       singleton: true,
-      mixins: ['TrackPlayingTab.ExtensionMixin', 'InjectContentScripts.ExtensionMixin']
+      mixins: ['TrackActiveTab.ExtensionMixin', 'InjectContentScripts.ExtensionMixin']
     });
   });
 
