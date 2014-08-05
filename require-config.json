@@ -1,11 +1,10 @@
 {
-  "baseUrl": "build/src",
   "paths": {
-    "jquery": "../../bower_components/jquery/dist/jquery",
-    "backbone": "../../bower_components/backbone/backbone",
-    "underscore": "../../bower_components/underscore/underscore",
-    "Factory": "../../bower_components/factoryjs/dist/Factory",
-    "BackboneFactory": "../../bower_components/factoryjs/dist/BackboneFactory"
+    "jquery": "../../../bower_components/jquery/dist/jquery",
+    "backbone": "../../../bower_components/backbone/backbone",
+    "underscore": "../../../bower_components/underscore/underscore",
+    "Factory": "../../../bower_components/factoryjs/dist/Factory",
+    "BackboneFactory": "../../../bower_components/factoryjs/dist/BackboneFactory"
   },
   "shim": {
     "jquery": {
@@ -21,6 +20,6 @@
   },
   "packages": [{
     "name": "oraculum",
-    "location": "../../bower_components/oraculum/dist"
+    "location": "../../../bower_components/oraculum/dist"
   }]
 }

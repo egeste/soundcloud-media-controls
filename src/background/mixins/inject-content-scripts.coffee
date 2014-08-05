@@ -6,7 +6,7 @@ define [
 
   _ = Oraculum.get 'underscore'
 
-  Oraculum.defineMixin 'InjectContentScripts.ExtensionMixin',
+  Oraculum.defineMixin 'InjectContentScripts.BackgroundMixin',
 
     mixinOptions:
       injectContentScripts:

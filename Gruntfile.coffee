@@ -3,14 +3,15 @@ requireConfig = require './require-config.json'
 
 # https://github.com/jrburke/r.js/blob/master/build/example.build.js
 rjsOptions = _.extend {}, requireConfig,
-  out: 'dist/background.js'
   name: 'index'
-  baseUrl: 'build/src'
-  include: ['../../bower_components/almond/almond']
+  include: ['../../../bower_components/almond/almond']
   findNestedDependencies: true
 
 module.exports = (grunt) ->
-  grunt.loadNpmTasks 'grunt-contib-bump'
+  grunt.loadNpmTasks 'grunt-bump'
+  grunt.loadNpmTasks 'grunt-csso'
+  grunt.loadNpmTasks 'grunt-autoprefixer'
+  grunt.loadNpmTasks 'grunt-contrib-less'
   grunt.loadNpmTasks 'grunt-contrib-clean'
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
@@ -21,27 +22,64 @@ module.exports = (grunt) ->
     component: require './bower.json'
 
     clean:
-      docs  : ['docs']
-      dist  : ['dist']
-      build : ['build']
+      dist       : ['dist']
+      css        : ['build/css']
+      popup      : ['build/src/popup']
+      background : ['build/src/background']
 
     coffee:
-      src:
+      popup:
         expand: true
         flatten: false
-        cwd: 'src/'
+        cwd: 'src/popup'
         src: ['**/*.coffee']
-        dest: 'build/src/'
+        dest: 'build/src/popup/'
+        ext: '.js'
+      background:
+        expand: true
+        flatten: false
+        cwd: 'src/background'
+        src: ['**/*.coffee']
+        dest: 'build/src/background/'
         ext: '.js'
 
     requirejs:
-      dev: options: (_.extend { optimize: 'none' }, rjsOptions)
-      rel: options: (_.extend { optimize: 'uglify2' }, rjsOptions)
+      popup:
+        options: (_.extend {
+          out: 'dist/popup.js'
+          baseUrl: 'build/src/popup'
+        }, rjsOptions)
+      background:
+        options: (_.extend {
+          out: 'dist/background.js'
+          baseUrl: 'build/src/background'
+        }, rjsOptions)
+
+    less:
+      main:
+        files:
+          'build/css/popup.less.css': 'assets/less/popup.less'
+
+    autoprefixer:
+      main:
+        src: 'build/css/popup.less.css'
+        dest: 'build/css/popup.ap.less.css'
+
+    csso:
+      main:
+        files:
+          'build/css/popup.csso.ap.less.css': 'build/css/popup.ap.less.css'
 
     watch:
-      src:
-        files: ['src/**/*.coffee']
-        tasks: ['default']
+      styles:
+        files: ['assets/less/**/*.less']
+        tasks: ['styles']
+      popup:
+        files: ['src/popup/**/*.coffee']
+        tasks: ['popup']
+      background:
+        files: ['src/background/**/*.coffee']
+        tasks: ['background']
 
     bump:
       options:
@@ -51,10 +89,29 @@ module.exports = (grunt) ->
         files: ['package.json', 'bower.json']
         updateConfigs: ['pkg', 'component']
 
+  grunt.registerTask 'styles', [
+    'clean:css'
+    'less'
+    'autoprefixer'
+    'csso'
+  ]
+
+  grunt.registerTask 'popup', [
+    'clean:popup'
+    'coffee:popup'
+    'requirejs:popup'
+  ]
+
+  grunt.registerTask 'background', [
+    'clean:background'
+    'coffee:background'
+    'requirejs:background'
+  ]
+
   grunt.registerTask 'default', [
-    'clean:build'
-    'coffee'
-    'requirejs:dev'
+    'popup'
+    'background'
+    'styles'
   ]
 
   grunt.registerTask 'live', [

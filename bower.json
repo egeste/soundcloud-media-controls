@@ -6,6 +6,7 @@
     "oraculum": "latest"
   },
   "devDependencies": {
-    "almond": "latest"
+    "almond": "latest",
+    "bootstrap": "latest"
   }
 }
