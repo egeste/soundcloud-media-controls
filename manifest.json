@@ -4,9 +4,8 @@
   "name": "__MSG_extension_name__",
   "description": "__MSG_extension_description__",
   "author": "Steve (Egesté) Regester <github@egeste.net>",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage_url": "https://github.com/egeste/soundcloud-media-controls",
-  "update_url": "https://github.com/egeste/soundcloud-media-controls/raw/master/updates.xml",
   "icons": {
     "16": "/images/logo_16.png",
     "48": "/images/logo_48.png",

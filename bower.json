@@ -1,6 +1,6 @@
 {
   "name": "soundcloud-media-controls",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "description": "Control SoundCloud using standard media buttons.",
   "dependencies": {
     "oraculum": "latest"

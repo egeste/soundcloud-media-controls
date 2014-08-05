@@ -1,6 +1,8 @@
 _ = require 'underscore'
 requireConfig = require './require-config.json'
 
+config = require './config.json'
+
 # https://github.com/jrburke/r.js/blob/master/build/example.build.js
 rjsOptions = _.extend {}, requireConfig,
   name: 'index'
@@ -8,13 +10,15 @@ rjsOptions = _.extend {}, requireConfig,
   findNestedDependencies: true
 
 module.exports = (grunt) ->
-  grunt.loadNpmTasks 'grunt-bump'
   grunt.loadNpmTasks 'grunt-csso'
+  grunt.loadNpmTasks 'grunt-bumpx'
   grunt.loadNpmTasks 'grunt-autoprefixer'
   grunt.loadNpmTasks 'grunt-contrib-less'
+  grunt.loadNpmTasks 'grunt-contrib-copy'
   grunt.loadNpmTasks 'grunt-contrib-clean'
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
+  grunt.loadNpmTasks 'grunt-contrib-build-crx'
   grunt.loadNpmTasks 'grunt-contrib-requirejs'
 
   grunt.initConfig
@@ -76,7 +80,7 @@ module.exports = (grunt) ->
     csso:
       main:
         files:
-          'build/css/popup.csso.ap.less.css': 'build/css/popup.ap.less.css'
+          'dist/popup.css': 'build/css/popup.ap.less.css'
 
     watch:
       shared:
@@ -93,12 +97,40 @@ module.exports = (grunt) ->
         tasks: ['styles']
 
     bump:
+      files: [
+        'bower.json'
+        'package.json'
+        'manifest.json'
+      ]
       options:
-        push: false
-        commit: false
-        createTag: false
-        files: ['package.json', 'bower.json']
-        updateConfigs: ['pkg', 'component']
+        level: 'patch'
+        onBumped: (data) ->
+          currentFile = data.task.filesSrc[data.index]
+          if /package.json/.test currentFile
+            grunt.config 'pkg', grunt.file.readJSON currentFile
+          if /bower.json/.test currentFile
+            grunt.config 'component', grunt.file.readJSON currentFile
+
+    'chrome-extension':
+      options:
+        cwd: '.'
+        name: 'SoundCloud Media Controls'
+        clean: true
+        chrome: config.GOOGLE_CHROME_BINARY
+        crxPath: 'build/extension/scmc-<%= pkg.version %>.crx'
+        zipPath: 'build/extension/scmc-<%= pkg.version %>.zip'
+        certPath: config.KEY_PEM
+        buildDir: 'build/extension/scmc'
+        cleanPath: 'build/extension/scmc'
+        resources: [
+          'dist/**'
+          'html/**'
+          'images/**'
+          'scripts/**'
+          '_locales/**'
+          'updates.xml'
+          'manifest.json'
+        ]
 
   grunt.registerTask 'styles', [
     'clean:css'
@@ -129,6 +161,12 @@ module.exports = (grunt) ->
     'popup'
     'background'
     'styles'
+  ]
+
+  grunt.registerTask 'package', [
+    'bump'
+    'default'
+    'chrome-extension'
   ]
 
   grunt.registerTask 'live', [
